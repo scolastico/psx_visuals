@@ -48,7 +48,7 @@ void fragment() {
 	ALPHA_SCISSOR_THRESHOLD = alpha_scissor_threshold;
 
 	vec4 emission_color = texture(emission, uv) * vec4(emission_tint, 1.0);
-	EMISSION = max(emission_color.rgb, fog_rgb);
+	EMISSION = emission_color.rgb + fog_rgb;
 
 	SPECULAR = 0.0;
 	ROUGHNESS = 0.0;
