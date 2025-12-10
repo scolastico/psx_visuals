@@ -1,6 +1,11 @@
 
 @tool extends EditorPlugin
 
-const GLOBAL_VAR_AFFINE := &"psx_affine_strength"
-const GLOBAL_VAR_SNAP := &"psx_snap_size"
-const GLOBAL_VAR_BIT_DEPTH := &"psx_bit_depth"
+const AUTOLOAD_NAME := "PSXScreenEffects"
+const AUTOLOAD_PATH := "res://addons/psx_visuals/ScreenDitherAutoload.gd"
+
+func _enable_plugin() -> void:
+	add_autoload_singleton(AUTOLOAD_NAME, AUTOLOAD_PATH)
+
+func _disable_plugin() -> void:
+	remove_autoload_singleton(AUTOLOAD_NAME)

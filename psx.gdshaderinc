@@ -6,12 +6,15 @@ const float PSX_DITHER_MATRIX[16] = float[](
     15.0, 7.0, 13.0, 5.0
 );
 
-float dither(vec2 uv) {
+vec4 dither(vec4 color, vec2 uv, int depth) {
 	ivec2 p = ivec2(floor(uv));
 	int xi = int(p.x & 3); // mod 4
 	int yi = int(p.y & 3); // mod 4
 	int index = xi + yi * 4;
-	return PSX_DITHER_MATRIX[index] / 16.0; // normalize to 0..1
+	
+	float norm = PSX_DITHER_MATRIX[index] / 16.0;
+	float bit_levels = float((1 << depth) - 1);
+	return floor((color + norm / bit_levels) * bit_levels) / bit_levels;
 }
 
 vec3 snap(vec3 vertex, mat4 matrix, float scale) {
