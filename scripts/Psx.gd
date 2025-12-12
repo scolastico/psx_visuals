@@ -15,23 +15,55 @@ const SETTING_GLOBAL_VAR_FOG_FAR := "shader_globals/" + GLOBAL_VAR_FOG_FAR
 const SETTING_GLOBAL_VAR_FOG_NEAR := "shader_globals/" + GLOBAL_VAR_FOG_NEAR
 const SETTING_GLOBAL_VAR_SNAP_DISTANCE := "shader_globals/" + GLOBAL_VAR_SNAP_DISTANCE
 
-static func set_affine_strength(value: float) -> void:
-	RenderingServer.global_shader_parameter_set(GLOBAL_VAR_AFFINE_STRENGTH, value)
+static var _affine_strength : float
+static var affine_strength : float :
+	get: return _affine_strength
+	set(value):
+		_affine_strength = value
+		RenderingServer.global_shader_parameter_set(GLOBAL_VAR_AFFINE_STRENGTH, value)
 
-static func set_bit_depth(value: int) -> void:
-	RenderingServer.global_shader_parameter_set(GLOBAL_VAR_BIT_DEPTH, clampi(value, 1, 8))
+static var _bit_depth : int
+static var bit_depth : int :
+	get: return _bit_depth
+	set(value):
+		_bit_depth = value
+		RenderingServer.global_shader_parameter_set(GLOBAL_VAR_BIT_DEPTH, value)
 
-static func set_fog_color(value: Color = Color.TRANSPARENT) -> void:
-	RenderingServer.global_shader_parameter_set(GLOBAL_VAR_FOG_COLOR, value)
+static var _fog_color : Color
+static var fog_color : Color :
+	get: return _fog_color
+	set(value):
+		_fog_color = value
+		RenderingServer.global_shader_parameter_set(GLOBAL_VAR_FOG_COLOR, value)
 
-static func set_fog_far(value: float) -> void:
-	RenderingServer.global_shader_parameter_set(GLOBAL_VAR_FOG_FAR, value)
+static var _fog_far : float
+static var fog_far : float :
+	get: return _fog_far
+	set(value):
+		_fog_far = value
+		RenderingServer.global_shader_parameter_set(GLOBAL_VAR_FOG_FAR, value)
 
-static func set_fog_near(value: float) -> void:
-	RenderingServer.global_shader_parameter_set(GLOBAL_VAR_FOG_NEAR, value)
+static var _fog_near : float
+static var fog_near : float :
+	get: return _fog_near
+	set(value):
+		_fog_near = value
+		RenderingServer.global_shader_parameter_set(GLOBAL_VAR_FOG_NEAR, value)
 
-static func set_snap_distance(value: float) -> void:
-	RenderingServer.global_shader_parameter_set(GLOBAL_VAR_SNAP_DISTANCE, value)
+static var _snap_distance : float
+static var snap_distance : float :
+	get: return _snap_distance
+	set(value):
+		_snap_distance = value
+		RenderingServer.global_shader_parameter_set(GLOBAL_VAR_SNAP_DISTANCE, value)
+
+static func _static_init() -> void:
+	_affine_strength = ProjectSettings.get_setting(SETTING_GLOBAL_VAR_AFFINE_STRENGTH)[&"value"]
+	_bit_depth = ProjectSettings.get_setting(SETTING_GLOBAL_VAR_BIT_DEPTH)[&"value"]
+	_fog_color = ProjectSettings.get_setting(SETTING_GLOBAL_VAR_FOG_COLOR)[&"value"]
+	_fog_far = ProjectSettings.get_setting(SETTING_GLOBAL_VAR_FOG_FAR)[&"value"]
+	_fog_near = ProjectSettings.get_setting(SETTING_GLOBAL_VAR_FOG_NEAR)[&"value"]
+	_snap_distance = ProjectSettings.get_setting(SETTING_GLOBAL_VAR_SNAP_DISTANCE)[&"value"]
 
 static func touch_shader_globals() -> void:
 	var any_setting_changed := false
