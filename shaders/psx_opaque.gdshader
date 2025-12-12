@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode blend_mix, vertex_lighting, diffuse_lambert, specular_occlusion_disabled, specular_disabled, shadows_disabled, fog_disabled, cull_disabled;
+render_mode blend_mix, vertex_lighting, ensure_correct_normals, diffuse_lambert, specular_occlusion_disabled, specular_disabled, shadows_disabled, fog_disabled, cull_disabled;
 
 #include "uid://bbm41nyy2th3f"
 
@@ -22,10 +22,24 @@ varying float fog_strength;
 varying vec2 affine_uv_scaled;
 varying float affine_distance;
 
+varying vec3 normal_color;
+varying vec3 face_color;
+
 void vertex() {
 	VERTEX = snap(VERTEX, MODELVIEW_MATRIX, psx_snap_distance);
 	vec3 vertex_world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	float vertex_distance = distance(vertex_world, CAMERA_POSITION_WORLD);
+	
+	//vec3 normal_world = (MODEL * vec4(NORMAL, 1.0)).xyz;
+	
+	vec3 normal_world = MODELVIEW_NORMAL_MATRIX * NORMAL;
+	//normal_world = (MODELVIEW_MATRIX * vec4(normal_world, 1.0)).xyz;
+	float ndotv = dot((vertex_world - CAMERA_POSITION_WORLD), normal_world);
+	
+	normal_color = abs(normal_world);
+	bool front_facing = ndotv > 0.0;
+	if (!front_facing) NORMAL = -NORMAL;
+	face_color = front_facing ? vec3(1,0,0) : vec3(0,0,1);
 
 	fog_strength = clamp(psx_fog_color.a * (vertex_distance - psx_fog_near) / (psx_fog_far - psx_fog_near), 0.0, 1.0);
 
@@ -55,7 +69,10 @@ void fragment() {
 	ROUGHNESS = 0.0;
 	METALLIC = 0.0;
 	AO = 1.0;
-	NORMAL = NORMAL;
+	
+	ALBEDO = vec3(0);
+	EMISSION = normal_color;
+	EMISSION = face_color;
 }
 
 //void light() {
