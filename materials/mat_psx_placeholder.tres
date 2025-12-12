@@ -1,0 +1,16 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://c5volcllr43l7"]
+
+[ext_resource type="Shader" uid="uid://bggae0ebsv0bj" path="res://addons/psx_visuals/shaders/psx_opaque.gdshader" id="1_jcdp6"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_dbss0"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_jcdp6")
+shader_parameter/use_vertex_colors_in_albedo = true
+shader_parameter/use_global_fog = true
+shader_parameter/flip_backface_normals = true
+shader_parameter/albedo = SubResource("PlaceholderTexture2D_dbss0")
+shader_parameter/albedo_tint = Color(1, 1, 1, 1)
+shader_parameter/emission_tint = Color(1, 1, 1, 1)
+shader_parameter/alpha_scissor_threshold = 0.5
