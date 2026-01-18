@@ -1,12 +1,11 @@
-
 class_name Psx
 
 const GLOBAL_VAR_AFFINE_STRENGTH := &"psx_affine_strength"
 const GLOBAL_VAR_BIT_DEPTH := &"psx_bit_depth"
 const GLOBAL_VAR_FOG_COLOR := &"psx_fog_color"
-const GLOBAL_VAR_FOG_FAR := &"psx_fog_near"
-const GLOBAL_VAR_FOG_NEAR := &"psx_fog_far"
-const GLOBAL_VAR_SNAP_DISTANCE := &"psx_snap_size"
+const GLOBAL_VAR_FOG_FAR := &"psx_fog_far" 
+const GLOBAL_VAR_FOG_NEAR := &"psx_fog_near"
+const GLOBAL_VAR_SNAP_DISTANCE := &"psx_snap_distance" 
 
 const SETTING_GLOBAL_VAR_AFFINE_STRENGTH := "shader_globals/" + GLOBAL_VAR_AFFINE_STRENGTH
 const SETTING_GLOBAL_VAR_BIT_DEPTH := "shader_globals/" + GLOBAL_VAR_BIT_DEPTH
@@ -58,6 +57,9 @@ static var snap_distance : float :
 		RenderingServer.global_shader_parameter_set(GLOBAL_VAR_SNAP_DISTANCE, value)
 
 static func _static_init() -> void:
+	# Ensure settings exist before trying to access them to avoid dictionary errors
+	if not ProjectSettings.has_setting(SETTING_GLOBAL_VAR_AFFINE_STRENGTH): touch_shader_globals()
+	
 	_affine_strength = ProjectSettings.get_setting(SETTING_GLOBAL_VAR_AFFINE_STRENGTH)[&"value"]
 	_bit_depth = ProjectSettings.get_setting(SETTING_GLOBAL_VAR_BIT_DEPTH)[&"value"]
 	_fog_color = ProjectSettings.get_setting(SETTING_GLOBAL_VAR_FOG_COLOR)[&"value"]
