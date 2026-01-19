@@ -30,12 +30,16 @@ varying float fog_strength;
 varying vec2 affine_uv_scaled;
 
 void vertex() {
-    VERTEX_COLOR = COLOR.rgb;
+	VERTEX_COLOR = COLOR.rgb;
 
-	VERTEX = snap(VERTEX, MODELVIEW_MATRIX, psx_snap_distance);
-	vec3 vertex_world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	// GODOT 4 FIX: VERTEX is already in View Space. 
+	// We snap it directly without multiplying by MODELVIEW_MATRIX.
+	VERTEX = round(VERTEX / psx_snap_distance) * psx_snap_distance;
 
-	VERTEX_DEPTH = distance(vertex_world, CAMERA_POSITION_WORLD);
+	// GODOT 4 FIX: Calculate depth directly from View Space coordinates.
+	// Since the camera is at (0,0,0) in View Space, length(VERTEX) is the distance.
+	VERTEX_DEPTH = length(VERTEX);
+
 	affine_uv_scaled = UV * VERTEX_DEPTH;
 	fog_strength = (use_global_fog && psx_fog_near != psx_fog_far) ?
 		clamp(psx_fog_color.a * (VERTEX_DEPTH - psx_fog_near) / (psx_fog_far - psx_fog_near), 0.0, 1.0) :
