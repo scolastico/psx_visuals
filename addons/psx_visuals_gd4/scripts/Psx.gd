@@ -109,3 +109,23 @@ static func touch_shader_globals() -> void:
 
 	if any_setting_changed:
 		ProjectSettings.save()
+
+static func remove_shader_globals() -> void:
+    var settings_to_remove = [
+        SETTING_GLOBAL_VAR_AFFINE_STRENGTH,
+        SETTING_GLOBAL_VAR_BIT_DEPTH,
+        SETTING_GLOBAL_VAR_FOG_COLOR,
+        SETTING_GLOBAL_VAR_FOG_FAR,
+        SETTING_GLOBAL_VAR_FOG_NEAR,
+        SETTING_GLOBAL_VAR_SNAP_DISTANCE
+    ]
+    
+    var changed = false
+    for setting in settings_to_remove:
+        if ProjectSettings.has_setting(setting):
+            ProjectSettings.clear(setting)
+            changed = true
+            
+    if changed:
+        ProjectSettings.save()
+        print("PSX Visuals: Shader globals successfully removed.")
