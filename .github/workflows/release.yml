@@ -31,23 +31,25 @@ jobs:
           cp LICENSE addons/psx_visuals_gd4/
           cp README.md addons/psx_visuals_gd4/
 
-      - name: Commit version change and files
+      - name: Commit and Push Release Version
         id: commit_release
         run: |
           git add addons/psx_visuals_gd4/plugin.cfg
           git add addons/psx_visuals_gd4/LICENSE
           git add addons/psx_visuals_gd4/README.md
           git commit -m "chore: release version ${{ github.event.inputs.version }}"
+          git push origin HEAD:${{ github.ref_name }}
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
       - name: Generate Changelog
         id: changelog
         run: |
+          # Use HEAD^ because the current HEAD is the release commit we just made
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           if [ -z "$PREVIOUS_TAG" ]; then
             LOG=$(git log --pretty=format:"* %s (%h)")
           else
-            LOG=$(git log $PREVIOUS_TAG..HEAD^ --pretty=format:"* %s (%h)")
+            LOG=$(git log $PREVIOUS_TAG..HEAD --pretty=format:"* %s (%h)")
           fi
           echo "body<<EOF" >> $GITHUB_OUTPUT
           echo "$LOG" >> $GITHUB_OUTPUT
@@ -63,14 +65,11 @@ jobs:
             ${{ steps.changelog.outputs.body }}
           target_commitish: ${{ steps.commit_release.outputs.sha }}
 
-      - name: Cleanup and Revert
+      - name: Reset to IN-DEV
         run: |
           sed -i 's/${{ github.event.inputs.version }}/IN-DEV/g' addons/psx_visuals_gd4/plugin.cfg
           git rm addons/psx_visuals_gd4/LICENSE
           git rm addons/psx_visuals_gd4/README.md
-
-      - name: Commit revert and Push
-        run: |
           git add addons/psx_visuals_gd4/plugin.cfg
-          git commit -m "chore: reset version to IN-DEV and remove legal files from addon"
+          git commit -m "chore: reset version to IN-DEV"
           git push origin HEAD:${{ github.ref_name }}
