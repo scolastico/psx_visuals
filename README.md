@@ -55,7 +55,7 @@ You can find these settings under **Project Settings > Shader Globals**.
 * **`psx_affine_strength`**: Controls texture warping. `1.0` provides full PSX-style warping, while `0.0` is modern perspective-correct mapping.
 * **`psx_bit_depth`**: Determines the color depth for the dither effect. Lower values (e.g., `4` or `5`) result in more aggressive banding/dithering.
 * **`psx_fog_color`**: The color of the distance fog. The Alpha channel determines the fog's intensity.
-* **`psx_fog_near` / `psx_fog_far**`: The start and end distances for the fog gradient.
+* **`psx_fog_near` / `psx_fog_far`**: The start and end distances for the fog gradient.
 
 ## License
 
