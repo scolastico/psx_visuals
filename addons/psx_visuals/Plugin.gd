@@ -1,6 +1,6 @@
 @tool extends EditorPlugin
 
-const AUTOLOAD_NAME := "PsxVisuals"
+const AUTOLOAD_NAME := "PsxVisualsGd4"
 const AUTOLOAD_PATH := "res://addons/psx_visuals/scripts/Autoload.gd"
 
 func _enable_plugin() -> void:
