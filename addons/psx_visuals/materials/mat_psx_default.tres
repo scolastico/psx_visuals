@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://drgm0tmni178j"]
 
-[ext_resource type="Shader" uid="uid://bggae0ebsv0bj" path="res://addons/psx_visuals/shaders/psx_opaque.gdshader" id="1_aefgp"]
+[ext_resource type="Shader" path="res://addons/psx_visuals/shaders/psx_opaque.gdshader" id="1_aefgp"]
 
 [resource]
 render_priority = 0

@@ -1,7 +1,7 @@
 shader_type spatial;
 render_mode blend_mix, vertex_lighting, diffuse_lambert, specular_occlusion_disabled, specular_disabled, shadows_disabled, fog_disabled;
 
-#include "uid://bbm41nyy2th3f"
+#include "res://addons/psx_visuals/shaders/psx.gdshaderinc"
 
 global uniform float psx_affine_strength;
 global uniform vec4 psx_fog_color;

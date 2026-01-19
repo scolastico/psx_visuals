@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-#include "uid://bbm41nyy2th3f"
+#include "res://addons/psx_visuals/shaders/psx.gdshaderinc"
 
 global uniform int psx_bit_depth;
 
