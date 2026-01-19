@@ -34,11 +34,12 @@ If you want to quickly convert an existing project, ensure both Autoloads are en
 Apply the provided materials or create new ones using the PSX shaders:
 
 1. Select a `MeshInstance3D`.
-2. Create a new `ShaderMaterial`.
+2. Create a new `ShaderMaterial` and apply it either as the **surface material** on the mesh or as a **material override** on the `MeshInstance3D` (do not use material overlay for this).
 3. Assign one of the shaders from `addons/psx_visuals_gd4/shaders/`:
-* `psx_opaque.gdshader`: For standard solid objects.
-* `psx_transparent.gdshader`: For objects with transparency.
-* `psx_opaque_double.gdshader` / `psx_transparent_double.gdshader`: For double-sided meshes (disables backface culling).
+   * `psx_opaque.gdshader`: For standard solid objects.
+   * `psx_transparent.gdshader`: For objects with transparency.
+   * `psx_opaque_double.gdshader` / `psx_transparent_double.gdshader`: For double-sided meshes (disables backface culling).
+4. (Optional) Add an extra material pass using your original material so it renders after the PSX shader, allowing you to combine the PSX effects with your existing look.
 
 ### Disabling Auto-Apply on Specific Nodes
 
@@ -60,3 +61,4 @@ You can find these settings under **Project Settings > Shader Globals**.
 ## License
 
 The original forked repository does not provide an explicit license. However, all changes, porting work for Godot 4, and new code provided in this version are licensed under the **MIT License**.
+
