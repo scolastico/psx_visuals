@@ -1,0 +1,74 @@
+name: Manual Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Semantic Version (e.g., 1.2.3)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Update version in plugin.cfg
+        run: |
+          sed -i 's/IN-DEV/${{ github.event.inputs.version }}/g' addons/psx_visuals_gd4/plugin.cfg
+
+      - name: Commit version change
+        run: |
+          git add addons/psx_visuals_gd4/plugin.cfg
+          git commit -m "chore: release version ${{ github.event.inputs.version }}"
+
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          # Get the latest tag name
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "No previous tag found. Fetching all commits."
+            LOG=$(git log --pretty=format:"* %s (%h)")
+          else
+            echo "Fetching commits since $PREVIOUS_TAG"
+            LOG=$(git log $PREVIOUS_TAG..HEAD --pretty=format:"* %s (%h)")
+          fi
+          
+          # Set output using the multiline EOF pattern
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          echo "$LOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: v${{ github.event.inputs.version }}
+          body: |
+            ## Commits in this release:
+            ${{ steps.changelog.outputs.body }}
+          target_commitish: ${{ github.sha }}
+
+      - name: Revert version to IN-DEV
+        run: |
+          sed -i 's/${{ github.event.inputs.version }}/IN-DEV/g' addons/psx_visuals_gd4/plugin.cfg
+
+      - name: Commit revert and Push
+        run: |
+          git add addons/psx_visuals_gd4/plugin.cfg
+          git commit -m "chore: reset version to IN-DEV after release"
+          git push origin HEAD:${{ github.ref_name }}
