@@ -41,13 +41,6 @@ void vertex() {
 	fog_strength = (use_global_fog && psx_fog_near != psx_fog_far) ?
 		clamp(psx_fog_color.a * (VERTEX_DEPTH - psx_fog_near) / (psx_fog_far - psx_fog_near), 0.0, 1.0) :
 		0.0;
-
-	if (flip_backface_normals) {
-		// GODOT 4 FIX: Perform check in View Space
-		vec3 view_dir = normalize(-VERTEX); // Vector from vertex to camera (0,0,0)
-		bool back_facing = dot(NORMAL, view_dir) < 0.0;
-		if (back_facing) NORMAL = -NORMAL;
-	}
 }
 
 void fragment() {
