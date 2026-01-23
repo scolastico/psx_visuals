@@ -74,18 +74,19 @@ Settings are located under **Project Settings > Globals > Shader Globals**:
 
 When updating to a newer version of **PSX Visuals - GD4 Port**, follow these steps to ensure you don't accidentally wipe your project configuration:
 
-1. **Disable the Plugin:** * Go to **Project Settings > Plugins** and uncheck the **Enabled** box for PSX Visuals.
+1. **Disable the Plugin:**
+   * Go to **Project Settings > Plugins** and uncheck the **Enabled** box for PSX Visuals.
    * A **Cleanup PSX Visuals** dialog will appear.
    * **CRITICAL:** To keep your progress, simply click **Cancel** or ensure both checkboxes (**Remove Shader Globals** and **Remove Node Metadata**) are **unchecked** before clicking **Execute Cleanup**. This preserves your project settings and the `psx_*` tags on your nodes.
-2. **Remove Old Files:**
+3. **Remove Old Files:**
    * Delete the `addons/psx_visuals_gd4` folder from your project directory.
    * *Note: Deleting the folder does not delete the metadata stored inside your .tscn files, so your settings are safe.*
-3. **Install New Version:**
+4. **Install New Version:**
    * Copy the new `addons/psx_visuals_gd4` folder into your project's `addons` directory.
-4. **Re-enable:**
+5. **Re-enable:**
    * Go back to **Project Settings > Plugins** and check the **Enabled** box.
    * The **Setup Dialog** will appear. Re-verify your preferred components (Dithering/Auto-Apply) and click **Apply Settings** to re-initialize the plugin and its shader globals.
 
 ## License
 
-The [original forked repository](https://github.com/snotbane/psx_visuals) is listed as using the Unlicense. All changes, Godot 4 porting work, and new code provided in this version are licensed under the **MIT License**.
+The original forked repository does not provide an explicit license in its source, but it is listed as using the Unlicense on the Godot Asset Library. However, all changes, Godot 4 porting work, and new code provided in this version are licensed under the MIT License.
