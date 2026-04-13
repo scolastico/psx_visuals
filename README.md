@@ -6,7 +6,21 @@ This plugin for Godot 4 provides a comprehensive suite of shaders and tools to r
 
 For a GD3 version, visit [the repo of snotbane](https://github.com/snotbane/psx_visuals) from which this repo is forked.
 
-## How the Plugin Works
+## ⚠️ The Future of this Plugin: Unification & Project Conversion
+
+**Note:** Snotbane (the original author) and I have started working together on unifying these repositories. During our collaboration, we figured out the actual culprit behind the workflow issues and visual bugs-and it turns out it was never a Godot 3 vs. Godot 4 version issue.
+
+**The Technical Culprit:**
+The core problem lies in how rendering pipelines handle overlapping geometry. Originally, attempting to apply the PSX jitter as a `next_pass` overlay on top of a standard material caused severe Z-fighting (flickering). This happens because the base material renders smooth, exact floating-point vertices, while the `next_pass` renders grid-snapped (jittered) vertices. Because the two layers calculate their vertex positions differently, they clash in 3D space.
+
+This GD4 port temporarily bypassed the Z-fighting by abandoning `next_pass` and completely replacing the materials at runtime using `AutoApply.gd`. However, doing a simple "drop-in" replacement meant throwing away complex PBR data (like Normal Maps, Roughness, and Metallic values) because our custom PSX shaders lacked the logic to render them.
+
+**Our New Experimental Approach: Project Conversion**
+To solve this permanently, we are experimenting with a new idea: moving away from a non-destructive "drop-in" plugin and instead focusing on an automated **Project Conversion**. 
+
+Instead of swapping to basic shaders at runtime, this new approach will generate custom "Uber Shaders" that perfectly mirror Godot's built-in `StandardMaterial3D` PBR code, but with our PSX vertex snapping and affine texture warping permanently injected inside. By running a one-time conversion on your project's materials, you will get the best of both worlds: full modern PBR support (normal maps, reflections, etc.) combined seamlessly with PS1 quirks, all rendered in a single pass with zero Z-fighting.
+
+## How the Plugin Works (Current Version)
 
 The plugin achieves its look through several key components:
 
@@ -90,4 +104,3 @@ When updating to a newer version of **PSX Visuals - GD4 Port**, follow these ste
 ## License
 
 The original forked repository does not provide an explicit license in its source, but it is listed as using the Unlicense on the Godot Asset Library. However, all changes, Godot 4 porting work, and new code provided in this version are licensed under the MIT License.
-
