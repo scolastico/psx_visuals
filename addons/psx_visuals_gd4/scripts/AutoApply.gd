@@ -13,10 +13,10 @@ func _on_node_added(node):
 	if node is GeometryInstance3D:
 		if node is Label3D:
 			return
-		
+
 		if node is GPUParticles3D:
 			return
-		
+
 		if node is CPUParticles3D:
 			return
 
@@ -94,10 +94,18 @@ func _apply_ps1_shader(node: GeometryInstance3D):
 			if original_mat.albedo_texture:
 				new_mat.set_shader_parameter("albedo", original_mat.albedo_texture)
 
-			# 2. Copy the Albedo Tint/Color
+			# 2. Copy the Albedo scale
+			new_mat.set_shader_parameter("albedo_scale", Vector2(original_mat.uv1_scale.x, original_mat.uv1_scale.y))
+
+			# 3. Copy the Albedo Tint/Color
 			new_mat.set_shader_parameter("albedo_tint", original_mat.albedo_color)
 
-			# 3. Handle Emission
+			# 3b. Copy triplanar settings
+			new_mat.set_shader_parameter("triplanar", original_mat.uv1_triplanar)
+			new_mat.set_shader_parameter("triplanar_sharpness", original_mat.uv1_triplanar_sharpness)
+			new_mat.set_shader_parameter("world_triplanar", original_mat.uv1_world_triplanar)
+
+			# 4. Handle Emission
 			if original_mat.emission_enabled:
 				new_mat.set_shader_parameter("emission", original_mat.emission_texture)
 				new_mat.set_shader_parameter("emission_tint", original_mat.emission)
