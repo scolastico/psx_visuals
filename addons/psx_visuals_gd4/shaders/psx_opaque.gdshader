@@ -11,16 +11,24 @@ void vertex() {
 	float v_fog;
 	vec2 v_affine;
 	
+	// Capture local position before snapping for triplanar
+	frag_local_pos = VERTEX;
+	
 	psx_compute_vertex(VERTEX, COLOR.rgb, UV, v_col, v_depth, v_fog, v_affine);
 	
 	VERTEX_COLOR = v_col;
 	VERTEX_DEPTH = v_depth;
 	fog_strength = v_fog;
 	affine_uv_scaled = v_affine;
+	
+	// Compute world-space position and normal for triplanar
+	frag_world_pos = (INV_VIEW_MATRIX * (MODELVIEW_MATRIX * vec4(frag_local_pos, 1.0))).xyz;
+	frag_world_normal = (INV_VIEW_MATRIX * (MODELVIEW_MATRIX * vec4(NORMAL, 0.0))).xyz;
+	frag_local_normal = NORMAL;
 }
 
 void fragment() {
-	psx_compute_fragment(UV, ALBEDO, ALPHA, EMISSION);
+	psx_compute_fragment(UV, frag_world_pos, frag_world_normal, frag_local_pos, frag_local_normal, ALBEDO, ALPHA, EMISSION);
 	
 	ALPHA_SCISSOR_THRESHOLD = alpha_scissor_threshold;
 	SPECULAR = 0.0;
